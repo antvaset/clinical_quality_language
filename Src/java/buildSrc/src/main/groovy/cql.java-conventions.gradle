@@ -61,25 +61,6 @@ test {
 }
 
 jacocoTestReport {
-    sourceDirectories.setFrom(files(
-            "${projectDir}/../cql-to-elm/src/main/java",
-            "${projectDir}/../engine/src/main/java",
-            "${projectDir}/../engine-fhir/src/main/java",
-            "${projectDir}/../../cql-to-elm/src/main/java",
-            "${projectDir}/../../engine/src/main/java",
-            "${projectDir}/../../engine-fhir/src/main/java",
-    ))
-
-    // Specify additional class directories or JAR files
-    classDirectories.setFrom(files(
-            "${projectDir}/../cql-to-elm/build/classes",
-            "${projectDir}/../engine/build/classes",
-            "${projectDir}/../engine-fhir/build/classes",
-            "${projectDir}/../../cql-to-elm/build/classes",
-            "${projectDir}/../../engine/build/classes",
-            "${projectDir}/../../engine-fhir/build/classes",
-    ))
-
     reports {
         xml.required = true
     }
