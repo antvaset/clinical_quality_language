@@ -945,6 +945,7 @@
 		<test name="testUnion6" inputfile="patient-example.xml"><expression>(1 | 2).combine(2).count() = 3</expression><output type="boolean">true</output></test> <!-- do not merge duplicates -->
 		<test name="testUnion7" inputfile="patient-example.xml"><expression>1.combine(1).count() = 2</expression><output type="boolean">true</output></test> <!-- do not merge duplicates -->
 		<test name="testUnion8" inputfile="patient-example.xml"><expression>1.combine(1).union(2).count() = 2</expression><output type="boolean">true</output></test> <!-- do not merge duplicates -->
+		<test name="testUnion9" inputfile="patient-example.xml"><expression>1.union(2).union(4).count() = 3</expression><output type="boolean">true</output></test>
 	</group>
 
 	<group name="testIntersect">
