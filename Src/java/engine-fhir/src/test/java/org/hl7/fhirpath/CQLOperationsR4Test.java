@@ -9,9 +9,8 @@ import java.util.Set;
 import org.fhir.ucum.UcumException;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhirpath.tests.Group;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.elm.executing.EqualEvaluator;
 import org.opencds.cqf.cql.engine.execution.State;
@@ -32,7 +31,8 @@ public class CQLOperationsR4Test extends TestFhirPath {
             fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseR4"));
     private static CompositeDataProvider provider = new CompositeDataProvider(fhirModelResolver, retrieveProvider);
 
-    public static Object[][] dataMethod() {
+    @Test
+    void test() throws UcumException {
         String[] listOfFiles = {
             "r4/tests-fhir-r4.xml",
             "cql/CqlAggregateFunctionsTest.xml",
@@ -52,17 +52,16 @@ public class CQLOperationsR4Test extends TestFhirPath {
             "cql/ValueLiteralsAndSelectors.xml"
         };
 
-        List<Object[]> testsToRun = new ArrayList<>();
+        List<DynamicTest> testsToRun = new ArrayList<>();
         for (String file : listOfFiles) {
             for (Group group : loadTestsFile(file).getGroup()) {
                 for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
                     if (!"2.1.0".equals(test.getVersion())) { // unsupported version
-                        testsToRun.add(new Object[] {file, group, test});
+                        test(file, group, test);
                     }
                 }
             }
         }
-        return testsToRun.toArray(new Object[testsToRun.size()][]);
     }
 
     public static Set<String> SKIP = Sets.newHashSet(
@@ -307,11 +306,13 @@ public class CQLOperationsR4Test extends TestFhirPath {
                         : test.getExpression().getValue());
     }
 
-    @ParameterizedTest
-    @MethodSource("dataMethod")
     void test(String file, Group group, org.hl7.fhirpath.tests.Test test) throws UcumException {
         var name = getTestName(file, group, test);
-        Assumptions.assumeFalse(SKIP.contains(name), "Skipping " + name);
+        if (SKIP.contains(name)) {
+            System.out.println("Skipping " + name);
+            return;
+        }
+        System.out.println("Running " + name);
         runTest(test, "r4/input/", fhirContext, provider, fhirModelResolver);
     }
 
